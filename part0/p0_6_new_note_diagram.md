@@ -11,5 +11,5 @@ sequenceDiagram
     server-->>browser: Responds with status code 201 created
     deactivate server
     Note right of browser: The browser stays on the same page, and it sends no further HTTP requests
-    Note over browser: The browser execute onsubmit event listener to render the new nodes locally
+    Note over browser: The browser execute onsubmit event listener to render the new notes locally
 ```
