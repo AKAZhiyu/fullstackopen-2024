@@ -1,8 +1,8 @@
 import { useState } from 'react'
 
-const Header = ({text}) => <h1>{text}</h1>
-  
-const Button = ({text, onClick}) => {
+const Header = ({ text }) => <h1>{text}</h1>
+
+const Button = ({ text, onClick }) => {
 
   return (
     <button onClick={onClick}>{text}</button>
@@ -13,7 +13,7 @@ const Button = ({text, onClick}) => {
 
 // }
 
-const FeedbackItem = ({text, num}) => {
+const FeedbackItem = ({ text, num }) => {
   return (
     <div>
       {text} {num}
@@ -21,8 +21,18 @@ const FeedbackItem = ({text, num}) => {
   )
 }
 
-const DisplayFeedback = ({goodNum, neutralNum, badNum}) => {
+const Statistics = ({ goodNum, neutralNum, badNum }) => {
   const total = goodNum + neutralNum + badNum
+
+  if (total === 0) {
+    return (
+      <div>
+        <h2>statistics</h2>
+        <p>No feedback given</p>
+      </div>
+    )
+  }
+
   const average = ((goodNum + (-1 * badNum)) / total).toFixed(2)
   const positiveRate = total === 0 ? "0%" : (goodNum / total * 100).toFixed(2) + "%"
   return (
@@ -34,7 +44,7 @@ const DisplayFeedback = ({goodNum, neutralNum, badNum}) => {
       <FeedbackItem text={"all"} num={total} />
       <FeedbackItem text={"average"} num={average} />
       {/* <FeedbackItem text={"positive"} num={`${positiveRate}%`}  /> */}
-      <FeedbackItem text={"positive"} num={positiveRate}  />
+      <FeedbackItem text={"positive"} num={positiveRate} />
     </div>
   )
 }
@@ -54,7 +64,7 @@ const App = () => {
   const handleNeutral = () => {
     setNeutral(neutral + 1)
   }
-  
+
   const handleBad = () => {
     setBad(bad + 1)
   }
@@ -65,7 +75,7 @@ const App = () => {
       <Button text="good" onClick={handleGood} />
       <Button text="neutral" onClick={handleNeutral} />
       <Button text="bad" onClick={handleBad} />
-      <DisplayFeedback goodNum={good} neutralNum={neutral} badNum={bad} />
+      <Statistics goodNum={good} neutralNum={neutral} badNum={bad} />
     </div>
   )
 }
