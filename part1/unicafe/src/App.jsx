@@ -15,39 +15,45 @@ const Button = ({ text, onClick }) => {
 
 const FeedbackItem = ({ text, num }) => {
   return (
-    <div>
-      {text} {num}
-    </div>
+    <tr>
+      <td>{text}</td>
+      <td>{num}</td>
+    </tr>
   )
 }
 
 const Statistics = ({ goodNum, neutralNum, badNum }) => {
-  const total = goodNum + neutralNum + badNum
+  const total = goodNum + neutralNum + badNum;
 
   if (total === 0) {
     return (
       <div>
-        <h2>statistics</h2>
+        <h2>Statistics</h2>
         <p>No feedback given</p>
       </div>
-    )
+    );
   }
 
-  const average = ((goodNum + (-1 * badNum)) / total).toFixed(2)
-  const positiveRate = total === 0 ? "0%" : (goodNum / total * 100).toFixed(2) + "%"
+  const average = ((goodNum + -1 * badNum) / total).toFixed(2);
+  const positiveRate = total === 0 ? "0%" : (goodNum / total * 100).toFixed(2) + "%";
+
   return (
     <div>
-      <h2>statistics</h2>
-      <FeedbackItem text={"good"} num={goodNum} />
-      <FeedbackItem text={"neutral"} num={neutralNum} />
-      <FeedbackItem text={"bad"} num={badNum} />
-      <FeedbackItem text={"all"} num={total} />
-      <FeedbackItem text={"average"} num={average} />
-      {/* <FeedbackItem text={"positive"} num={`${positiveRate}%`}  /> */}
-      <FeedbackItem text={"positive"} num={positiveRate} />
+      <h2>Statistics</h2>
+      <table>
+        <tbody>
+          <FeedbackItem text="Good" num={goodNum} />
+          <FeedbackItem text="Neutral" num={neutralNum} />
+          <FeedbackItem text="Bad" num={badNum} />
+          <FeedbackItem text="All" num={total} />
+          <FeedbackItem text="Average" num={average} />
+          <FeedbackItem text="Positive" num={positiveRate} />
+        </tbody>
+      </table>
     </div>
-  )
-}
+  );
+};
+
 
 const App = () => {
   const siteTitle = "give feedback"
