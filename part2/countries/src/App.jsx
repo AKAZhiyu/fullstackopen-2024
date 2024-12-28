@@ -35,7 +35,7 @@ function App() {
   return (
     <div>
       <div>find countries<input value={value} onChange={handleValueChange} /></div>
-      <Display countries={countries} />
+      <Display countries={countries} setCountries={setCountries} />
     </div>
   )
 }
