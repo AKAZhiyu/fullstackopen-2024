@@ -1,23 +1,20 @@
 {
-  "name": "noteapp",
-  "version": "1.0.0",
-  "description": "",
+  "name": "phonebook-backend",
+  "version": "0.0.1",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build:ui": "rm -rf build && cd ../part2-notes/ && npm run build && cp -r build ../notes-backend",
-    "deploy": "git push heroku main",
-    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",    
-    "logs:prod": "heroku logs --tail"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Jason Zhang",
+  "license": "MIT",
+  "description": "",
   "dependencies": {
-    "express": "^4.17.3"
+    "express": "^4.21.2",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "nodemon": "^3.1.9"
   }
 }

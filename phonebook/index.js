@@ -1,84 +1,107 @@
 const express = require('express')
+const morgan = require('morgan')
+
 const app = express()
 
-let notes = [
-  {
-    id: 1,
-    content: "HTML is easy",
-    date: "2022-01-10T17:30:31.098Z",
-    important: true
-  },
-  {
-    id: 2,
-    content: "Browser can execute only Javascript",
-    date: "2022-01-10T18:39:34.091Z",
-    important: false
-  },
-  {
-    id: 3,
-    content: "GET and POST are the most important methods of HTTP protocol",
-    date: "2022-01-10T19:20:14.298Z",
-    important: true
-  }
-]
+morgan.token('obj', (req, res) => JSON.stringify(req.body) )
 
 app.use(express.json())
 
-app.get('/', (req, res) => {
-  res.send('<h1>Hello World!</h1>')
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :obj'));
+
+
+let persons = [
+    {
+        "id": "1",
+        "name": "Arto Hellas",
+        "number": "040-123456"
+    },
+    {
+        "id": "2",
+        "name": "Ada Lovelace",
+        "number": "39-44-5323523"
+    },
+    {
+        "id": "3",
+        "name": "Dan Abramov",
+        "number": "12-43-234345"
+    },
+    {
+        "id": "4",
+        "name": "Mary Poppendieck",
+        "number": "39-23-6423122"
+    }
+]
+
+app.get('/api/persons', (request, response) => {
+    response.json(persons)
+})
+
+app.get('/info', (request, response) => {
+    const currentDate = new Date(); // 获取当前日期和时间
+    const formattedDate = currentDate.toString(); // 格式化日期
+    response.send(`
+        <p>The phonebook has info for ${persons.length} people</p>
+        <p>${formattedDate}</p>
+        `)
+})
+
+app.get('/api/persons/:id', (request, response) => {
+    const id = request.params.id
+    const person = persons.find(p => p.id === id)
+
+    if (!person) {
+        return response.status(404).end()
+    }
+
+    response.json(person)
+})
+
+app.delete('/api/persons/:id', (request, response) => {
+    const id = request.params.id
+    persons = persons.filter(p => p.id !== id)
+    response.status(204).end()
 })
 
 const generateId = () => {
-  const maxId = notes.length > 0
-    ? Math.max(...notes.map(n => n.id))
-    : 0
-  return maxId + 1
+
+    return String(Math.floor(Math.random() * 1000000))
 }
 
-app.post('/api/notes', (request, response) => {
-  const body = request.body
+app.post('/api/persons', (request, response) => {
+    const body = request.body
 
-  if (!body.content) {
-    return response.status(400).json({ 
-      error: 'content missing' 
-    })
-  }
+    if (!body.name || !body.number) {
+        return response.status(400).json({
+            error: "Name or number is missing"
+        });
+    }
 
-  const note = {
-    content: body.content,
-    important: body.important || false,
-    date: new Date(),
-    id: generateId(),
-  }
+    if (persons.find(p => p.name === body.name)) {
+        return response.status(400).json({
+            error: "Name must be unique"
+        });
+    }
 
-  notes = notes.concat(note)
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: generateId()
+    }
 
-  response.json(note)
+    persons = persons.concat(person)
+
+    response.json(person)
 })
 
-app.get('/api/notes', (req, res) => {
-  res.json(notes)
-})
 
-app.delete('/api/notes/:id', (request, response) => {
-  const id = Number(request.params.id)
-  notes = notes.filter(note => note.id !== id)
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+}
 
-  response.status(204).end()
-})
-
-app.get('/api/notes/:id', (request, response) => {
-  const id = Number(request.params.id)
-  const note = notes.find(note => note.id === id)
-
-  if (note) {
-    response.json(note)
-  } else {
-    response.status(404).end()
-  }
-})
+app.use(unknownEndpoint)
 
 const PORT = 3001
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+    console.log(`server running on port ${PORT}`)
 })
